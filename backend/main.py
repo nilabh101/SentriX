@@ -6,6 +6,7 @@ from .database import init_db, get_session
 from .models import Alert, TriageResult, SourceLog, PublicQuery
 from .triage_agent import triage_alert
 from .router import route_and_resolve_query
+from .seed import seed
 
 app = FastAPI(title="SetuAI Public Assistant")
 
@@ -20,6 +21,7 @@ app.add_middleware(
 @app.on_event("startup")
 def on_startup():
     init_db()
+    seed()
 
 @app.get("/")
 async def root():

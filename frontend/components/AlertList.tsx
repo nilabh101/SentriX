@@ -8,7 +8,7 @@ const AlertList: React.FC = () => {
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
 
-    const loadAlerts = async () => {
+    const loadAlerts = React.useCallback(async () => {
         try {
             setLoading(true);
             const data = await fetchAlerts();
@@ -18,17 +18,28 @@ const AlertList: React.FC = () => {
         } finally {
             setLoading(false);
         }
-    };
+    }, []);
 
     useEffect(() => {
         loadAlerts();
         // Poll for updates every 10 seconds
         const interval = setInterval(loadAlerts, 10000);
         return () => clearInterval(interval);
-    }, []);
+    }, [loadAlerts]);
 
-    if (loading && alerts.length === 0) return <div className="text-center py-20 text-blue-400 font-mono animate-pulse">Scanning network for threats...</div>;
-    if (error) return <div className="text-center py-20 text-red-400 font-mono">{error}</div>;
+    if (loading && alerts.length === 0) return <div className="text-center py-20 text-blue-400 font-mono animate-pulse uppercase tracking-[0.2em] text-[10px]">Scanning network for threats...</div>;
+
+    if (error) return (
+        <div className="text-center py-20">
+            <div className="text-red-400 font-mono text-sm mb-6">{error}</div>
+            <button
+                onClick={loadAlerts}
+                className="text-[10px] font-mono border border-white/10 px-6 py-3 rounded-xl uppercase tracking-widest hover:bg-white/5 transition-all"
+            >
+                Retry Connection
+            </button>
+        </div>
+    );
 
     return (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
@@ -36,8 +47,8 @@ const AlertList: React.FC = () => {
                 <AlertCard key={alert.id} alert={alert} onRefresh={loadAlerts} />
             ))}
             {alerts.length === 0 && (
-                <div className="col-span-full text-center py-20 text-gray-500 font-mono border-2 border-dashed border-white/5 rounded-2xl">
-                    No security alerts detected. System secure.
+                <div className="col-span-full text-center py-20 text-gray-500 font-mono border border-dashed border-white/10 rounded-2xl mx-12">
+                    <div className="text-[10px] uppercase tracking-widest opacity-40">No security alerts detected. System secure.</div>
                 </div>
             )}
         </div>

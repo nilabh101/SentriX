@@ -1,36 +1,56 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+@import "tailwindcss";
 
-:root {
-  --background: #05070a;
-  --foreground: #e2e8f0;
-  --primary: #3b82f6;
-  --secondary: #1e293b;
-  --accent: #10b981;
-  --danger: #ef4444;
-  --warning: #f59e0b;
+@theme {
+  --font-sans: "Inter", system-ui, sans-serif;
+  --font-mono: "Instrument Sans Mono", monospace;
+
+  --color-background: #000000;
+  --color-foreground: #ffffff;
+
+  --color-border: rgba(255, 255, 255, 0.08);
+  --color-glass: rgba(255, 255, 255, 0.03);
+  --color-glass-hover: rgba(255, 255, 255, 0.06);
 }
 
-body {
-  color: var(--foreground);
-  background: var(--background);
-  font-family: 'Inter', system-ui, -apple-system, sans-serif;
-}
-
-.glass {
-  background: rgba(30, 41, 59, 0.5);
-  backdrop-filter: blur(12px);
-  border: 1px solid rgba(255, 255, 255, 0.1);
-}
-
-.card-hover:hover {
-  border-color: rgba(59, 130, 246, 0.5);
-  box-shadow: 0 0 20px rgba(59, 130, 246, 0.1);
-}
-
-@layer utilities {
-  .text-balance {
-    text-wrap: balance;
+@layer base {
+  body {
+    @apply bg-background text-foreground antialiased selection:bg-white/10;
+    background: linear-gradient(to bottom right, #020617, #172554, #0f172a);
+    color: white;
+    min-height: 100vh;
+    margin: 0;
+    -webkit-font-smoothing: antialiased;
+    font-feature-settings: "cv02", "cv03", "cv04", "cv11";
   }
+}
+
+@layer components {
+  .xtract-card {
+    @apply bg-glass border border-border rounded-[32px] transition-all duration-500 hover:bg-glass-hover hover:border-white/20;
+  }
+
+  .glass {
+    background: rgba(255, 255, 255, 0.02);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+  }
+}
+
+/* Custom Scrollbar for Xtract look */
+::-webkit-scrollbar {
+  width: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: #000000;
+}
+
+::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 10px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(255, 255, 255, 0.2);
 }

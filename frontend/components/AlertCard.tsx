@@ -2,6 +2,7 @@
 import React, { useState } from 'react';
 import { Alert, startTriage } from '@/lib/api';
 import TriageModal from './TriageModal';
+import XtractCard from './XtractCard';
 
 interface AlertCardProps {
     alert: Alert;
@@ -10,61 +11,65 @@ interface AlertCardProps {
 
 const AlertCard: React.FC<AlertCardProps> = ({ alert, onRefresh }) => {
     const [showModal, setShowModal] = useState(false);
-    const severityColors: Record<string, string> = {
-        Low: 'text-blue-400 border-blue-400/20',
-        Medium: 'text-yellow-400 border-yellow-400/20',
-        High: 'text-orange-400 border-orange-400/20',
-        Critical: 'text-red-400 border-red-400/20',
-    };
 
-    const handleTriage = async () => {
+    const [isTriaging, setIsTriaging] = useState(false);
+
+    const handleTriage = async (e: React.MouseEvent) => {
+        e.stopPropagation();
+        if (isTriaging) return;
+
+        setIsTriaging(true);
         try {
             await startTriage(alert.id);
-            onRefresh();
+            // We poll in AlertList, but let's wait a bit then refresh
+            setTimeout(() => {
+                onRefresh();
+                setIsTriaging(false);
+            }, 3000);
         } catch (err) {
             console.error(err);
+            setIsTriaging(false);
         }
     };
 
     return (
         <>
-            <div
+            <XtractCard
+                className={`p-10 ${alert.status === 'Triaged' ? 'cursor-pointer' : ''}`}
                 onClick={() => alert.status === 'Triaged' && setShowModal(true)}
-                className={`glass p-6 rounded-xl border border-white/10 ${alert.status === 'Triaged' ? 'cursor-pointer' : ''} card-hover transition-all duration-300`}
             >
-                <div className="flex justify-between items-start mb-4">
+                <div className="flex justify-between items-start mb-10">
                     <div>
-                        <span className={`text-xs font-mono px-2 py-1 rounded border ${severityColors[alert.severity] || 'text-gray-400 border-gray-400/20'}`}>
-                            {alert.severity.toUpperCase()}
-                        </span>
-                        <h3 className="text-xl font-semibold mt-2">{alert.title}</h3>
+                        <div className="text-[10px] font-mono text-zinc-600 uppercase tracking-widest mb-4">
+                            {alert.severity} / {alert.source}
+                        </div>
+                        <h3 className="text-2xl font-bold">{alert.title}</h3>
                     </div>
-                    <span className="text-xs text-gray-400 font-mono">
-                        {new Date(alert.timestamp).toLocaleTimeString()}
-                    </span>
                 </div>
 
-                <p className="text-gray-400 text-sm mb-6 line-clamp-2">
+                <p className="text-zinc-500 text-sm leading-relaxed mb-12 line-clamp-2">
                     {alert.description}
                 </p>
 
                 <div className="flex justify-between items-center">
-                    <span className="text-xs font-mono text-blue-400/70">{alert.source}</span>
+                    <span className="text-[10px] font-mono text-white/20 uppercase tracking-widest">
+                        {new Date(alert.timestamp).toLocaleTimeString()}
+                    </span>
                     {alert.status === 'Pending' ? (
                         <button
-                            onClick={(e) => {
-                                e.stopPropagation();
-                                handleTriage();
-                            }}
-                            className="px-4 py-2 bg-primary/20 hover:bg-primary/30 text-primary text-xs font-semibold rounded-lg border border-primary/20 transition-all"
+                            onClick={handleTriage}
+                            disabled={isTriaging}
+                            className="text-[10px] font-mono uppercase tracking-widest text-white border border-white/10 px-6 py-3 rounded-xl hover:bg-white/5 transition-all disabled:opacity-50"
                         >
-                            Run AI Triage
+                            {isTriaging ? "Triaging..." : "Run Triage"}
                         </button>
                     ) : (
-                        <span className="text-xs font-mono text-accent">{alert.status}</span>
+                        <span className="text-[10px] font-mono uppercase tracking-widest text-emerald-400">
+                            {alert.status}
+                        </span>
                     )}
                 </div>
-            </div>
+            </XtractCard>
 
             {showModal && (
                 <TriageModal alert={alert} onClose={() => setShowModal(false)} />

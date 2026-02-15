@@ -1,38 +1,39 @@
 "use client";
+import XtractCard from "@/components/XtractCard";
 import AlertList from "@/components/AlertList";
 import Link from 'next/link';
 
 export default function SecurityPage() {
     return (
-        <main className="min-h-screen p-8 md:p-16 max-w-7xl mx-auto">
-            <header className="mb-12 flex justify-between items-end">
+        <main className="min-h-screen bg-black text-white p-8 md:p-24 max-w-7xl mx-auto pb-48">
+            <header className="mb-32 flex flex-col md:flex-row justify-between items-start md:items-end gap-8">
                 <div>
-                    <Link href="/" className="text-xs font-mono text-blue-400 hover:text-blue-300 transition-colors uppercase mb-4 block">
-                        &larr; Back to Hub
+                    <Link href="/" className="text-[10px] font-mono text-zinc-500 hover:text-white transition-colors uppercase tracking-widest block mb-12">
+                        &larr; Return to Hub
                     </Link>
-                    <h1 className="text-4xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-blue-400 to-emerald-400">
-                        SentriX SOC
-                    </h1>
-                    <p className="text-gray-400 mt-2 font-mono text-sm">
-                        AI-Powered Alert Triage & Response
+                    <h1 className="text-6xl font-bold tracking-tight mb-6">SentriX SOC</h1>
+                    <p className="text-zinc-500 text-lg max-w-2xl leading-relaxed">
+                        Automated network triage and real-time threat detection for the Digital India perimeter.
                     </p>
                 </div>
-                <div className="text-right hidden md:block">
-                    <div className="text-xs font-mono text-blue-400/60 uppercase">System Status</div>
-                    <div className="text-emerald-400 font-mono flex items-center gap-2">
-                        <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
+                <div className="text-right">
+                    <div className="text-[10px] font-mono text-zinc-600 uppercase tracking-widest mb-3">System Pulse</div>
+                    <div className="text-white text-xs font-bold font-mono flex items-center gap-2 justify-end uppercase tracking-widest">
+                        <span className="w-1.5 h-1.5 rounded-full bg-white animate-pulse" />
                         Operational
                     </div>
                 </div>
             </header>
 
-            <div className="mb-8">
-                <h2 className="text-xl font-semibold mb-6 flex items-center gap-2">
-                    <span className="w-1 h-6 bg-primary rounded-full"></span>
+            <section>
+                <h2 className="text-[10px] uppercase font-mono tracking-[0.2em] text-zinc-600 mb-12 flex items-center gap-4">
                     Active Alerts
+                    <div className="h-[1px] flex-grow bg-white/5" />
                 </h2>
-                <AlertList />
-            </div>
+                <XtractCard className="p-0 overflow-hidden border-white/10">
+                    <AlertList />
+                </XtractCard>
+            </section>
         </main>
     );
 }

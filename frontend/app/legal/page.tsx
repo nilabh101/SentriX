@@ -1,58 +1,64 @@
 "use client";
 import React from 'react';
 import Link from 'next/link';
+import XtractCard from '@/components/XtractCard';
+import { useRouter } from 'next/navigation';
 
 const LegalPage: React.FC = () => {
+    const router = useRouter();
     const commonRights = [
-        { title: "RTI (Right to Information)", desc: "Request data from public authorities." },
-        { title: "Consumer Protection", desc: "File complaints against unfair trade." },
-        { title: "Motor Vehicle Act", desc: "Know your traffic rights and penalties." },
-        { title: "Arrest Rights", desc: "Guidelines for fair arrest and detention." }
+        { title: "RTI", desc: "Access public records instantly." },
+        { title: "Consumer Rights", desc: "Against unfair trade practices." },
+        { title: "Cyber Laws", desc: "Protection from identity theft." },
+        { title: "BNS / IPC", desc: "Simplified Indian penal code." },
+        { title: "Women's Rights", desc: "DV Act and safety protocols." },
+        { title: "Child POCSO", desc: "Mandatory protection laws." },
+        { title: "Traffic Rights", desc: "Detention and fine guidelines." },
+        { title: "Senior Citizens", desc: "Welfare and maintenance act." }
     ];
 
+    const handleQuery = (text: string) => {
+        router.push(`/?q=${encodeURIComponent(text)}`);
+    };
+
     return (
-        <main className="min-h-screen p-8 md:p-16 max-w-7xl mx-auto">
-            <header className="mb-12">
-                <Link href="/" className="text-xs font-mono text-orange-400 hover:text-orange-300 transition-colors uppercase mb-4 block">
-                    &larr; Back to Hub
+        <main className="min-h-screen bg-black text-white p-8 md:p-24 max-w-7xl mx-auto pb-48 relative z-20">
+            <header className="mb-32">
+                <Link href="/" className="text-[10px] font-mono text-zinc-500 hover:text-white transition-colors uppercase tracking-widest block mb-12">
+                    &larr; Return to Hub
                 </Link>
-                <h1 className="text-4xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-orange-400 to-yellow-500">
-                    NyayaAgent Legal Aid
-                </h1>
-                <p className="text-gray-400 mt-2 font-mono text-sm leading-relaxed">
-                    Democratizing Law for every Indian citizen. Simple, Accurate, and Accessible.
+                <h1 className="text-6xl font-bold tracking-tight mb-6">NyayaAgent</h1>
+                <p className="text-zinc-500 text-lg max-w-2xl leading-relaxed">
+                    Simplified Indian law (BNS/IPC) for the common citizen. Access justice via AI-driven triage.
                 </p>
             </header>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-16">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-24">
                 {commonRights.map((right, idx) => (
-                    <div key={idx} className="glass p-6 rounded-2xl border border-orange-500/10 hover:border-orange-500/30 transition-all cursor-pointer">
-                        <h4 className="text-orange-400 font-bold mb-2">{right.title}</h4>
-                        <p className="text-gray-500 text-xs">{right.desc}</p>
-                    </div>
+                    <XtractCard
+                        key={idx}
+                        className="p-8 cursor-pointer"
+                        onClick={() => handleQuery(right.title)}
+                    >
+                        <div className="text-[8px] font-mono text-zinc-600 uppercase tracking-widest mb-4">Constitutional Right</div>
+                        <h4 className="font-bold mb-3">{right.title}</h4>
+                        <p className="text-zinc-500 text-[10px] leading-relaxed uppercase tracking-widest font-mono">{right.desc}</p>
+                    </XtractCard>
                 ))}
             </div>
 
-            <div className="glass p-12 rounded-3xl border border-white/5 text-center">
-                <h2 className="text-2xl font-bold mb-4">Have a Legal Query?</h2>
-                <p className="text-gray-400 mb-8 max-w-lg mx-auto">
-                    Ask our AI about Indian laws, BNS sections, or how to handle a specific situation.
-                    Use the global search on the Home page for an immediate AI triage of your case.
+            <XtractCard className="text-center py-24">
+                <h2 className="text-3xl font-bold mb-6">Legal Query Engine</h2>
+                <p className="text-zinc-500 mb-12 max-w-lg mx-auto text-sm leading-relaxed">
+                    Ask NyayaAgent about your specific situation. Our AI will analyze BNS sections to provide immediate clarity.
                 </p>
-                <Link href="/" className="bg-orange-500 hover:bg-orange-400 text-black font-bold px-8 py-3 rounded-xl transition-all">
-                    Ask NyayaAgent on Hub
-                </Link>
-            </div>
-
-            <section className="mt-20">
-                <h3 className="text-xl font-bold mb-8 flex items-center gap-2">
-                    <span className="w-1 h-6 bg-orange-500 rounded-full"></span>
-                    Recent Case Triage
-                </h3>
-                <div className="text-center py-20 text-gray-600 font-mono border-2 border-dashed border-white/5 rounded-2xl">
-                    Start a new query on the Hub to see your legal triage here.
-                </div>
-            </section>
+                <button
+                    onClick={() => handleQuery("Explain my legal rights in India")}
+                    className="bg-white text-black font-bold px-10 py-3 rounded-xl transition-all hover:bg-zinc-200 uppercase text-xs tracking-widest font-mono"
+                >
+                    Consult AI Hub
+                </button>
+            </XtractCard>
         </main>
     );
 };
